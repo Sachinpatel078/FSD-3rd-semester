@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Second Year Student Regestration Website</title>
+    <link rel="stylesheet" href="Sectionwebsite.css">
+</head>
+<body>
+    
+<h1 style="text-align: center;">Second Year Student Regestration Website</h1>
+    <hr>
+<form action="/submit personal details" style="border: #ccc;">
+    <p> <label for="Full name"> First name: </label>
+       <input type="text" name="First_name" id="First_name" placeholder="Enter your First Name"></p>
+    <p> <label for="Email adderess"> Last name: </label>
+        <input type="text" name="Last_name" id="Last_name" placeholder="Enter your Last Name"></p>
+    <p> <label for="College Email Adderess"> Email:</label>
+    <input type="text" name="email" id="email" placeholder="College Email "></p>
+    <p> <label for="Password"> Password: </label>
+    <input type="text" id="Password" name="Password" placeholder="Enter Password"></p>
+    <p> <label for="Year"> Year: </label>
+    <select id="Year" name="Year">
+        <option value="" selected disabled> Select Year </option>
+        <option value="1st Year">1st Year</option>
+        <option value="2nd Year">2nd Year</option>
+        <option value="3rd Year">3rd Year</option>
+        <option value="4th Year">4th Year</option>  
+    </select></p>
+    
+    <p> <label for="Gender"> Gender:</label>
+    <input type="radio" id="Male" name="Gender" value="Male">
+    <label for="Male"> Male</label>
+    <input type="radio" id="Female" name="Gender" value="Female">
+    <label for="Female">Female</label>
+    <input type="radio" id="Other" name="Gender" value="Other">
+    <label for="Other"> Other</label></p>
+    <p> <label for="Course"> Course:</label>
+    <select id="Course" name="Course">
+        <option value="" selected disabled> Select Course </option>
+        <option value="BCA">BCA</option>
+        <option value="B.Tech">B.Tech</option>
+        <option value="BCOM">BCOM</option>
+        <option value="BA">BA</option>  
+    </select></p>
+        <p><label for="Contact Number"> Contact Number:</label>
+    <input type="tel" id="Contact Number" name="Contact Number" placeholder="Enter phone number"></p>
+    <p><label for="Adderess"> Address:</label></p>
+    <textarea id="address" name="adderess" rows="5" cols="50"></textarea>
+    <div class="buttons">
+        <input type="submit" value="Register">
+        <input type="reset" value="Clear">
+    </div>
+    <hr>
+    </form>
+   
+</body>
+</html>
