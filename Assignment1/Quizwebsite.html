@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FSD Quiz</title>
+    <link rel="stylesheet" href="Quizwebsite.css">
+</head>
+<body>
+<h1>FSD Quiz</h1>
+
+<div id="startPage" class="box">
+    <h2>Student Details</h2>
+
+    <input id="name" type="text" placeholder="Enter Name">
+    <input id="roll" type="text" placeholder="Enter Roll Number">
+    <input id="className" type="text" placeholder="Enter Class">
+
+    <p>10 Questions | Time: 20 minutes </p>
+
+    <button onclick="startQuiz()">Start Quiz</button>
+</div>
+
+<div id="quizPage" class="box hide">
+
+    <div class="top">
+        <b id="welcome"></b>
+        <b id="timer">05:00</b>
+    </div>
+
+    <p id="progress"></p>
+
+    <div class="progress">
+        <div id="bar"></div>
+    </div>
+
+    <h3 id="question"></h3>
+
+    <div id="options"></div>
+
+    <div class="buttons">
+        <button onclick="previousQuestion()">Previous</button>
+        <button onclick="clearAnswer()">Clear</button>
+        <button onclick="nextQuestion()">Next</button>
+    </div>
+
+    <h3>Questions</h3>
+    <div id="numbers"></div>
+
+    <button class="submit" onclick="submitQuiz()">Submit Quiz</button>
+</div>
+
+<div id="resultPage" class="box hide">
+    <h2>Quiz Result</h2>
+
+    <p>Name: <b id="resultName"></b></p>
+    <p>Roll No: <b id="resultRoll"></b></p>
+    <p>Class: <b id="resultClass"></b></p>
+    <hr>
+    <h2 id="score"></h2>
+    <p>Percentage: <b id="percentage"></b></p>
+    <p>Correct: <b id="correct"></b></p>
+    <p>Wrong: <b id="wrong"></b></p>
+    <p>Unanswered: <b id="unanswered"></b></p>
+
+    <h3 id="message"></h3>
+
+    <button onclick="showReview()">Answer Review</button>
+    <button onclick="restartQuiz()">Restart Quiz</button>
+
+    <div id="review" class="review"></div>
+</div>
+
+<script src="Quizwebsite.js"></script>
+</body>
+</html>
