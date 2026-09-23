@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+    let myWindow;
+
+    function openWin() {
+    myWindow = window.open("", "myWindow", "width=200, height=500 ,left=100 ,right=200");
+    myWindow.document.write("<p>This is my new window with moveTo and moveBy event</p>")
+    }
+
+    function closeWin() {
+    myWindow.close();
+    }
+
+    function movetoWin(){
+        myWindow.moveTo(200,300);
+        myWindow.focus();
+    }
+
+    function movebyWin(){
+        myWindow.moveBy(200,300);
+        myWindow.focus();
+    }
+    </script>
+</head>
+<body>
+    <button onclick="openWin()">OPEN</button>
+    <button onclick="closeWin()">CLOSE</button>
+    <button onclick="movetoWin()">MOVE TO</button>
+    <button onclick="movebyWin()">MOVE BY</button>
+</body>
+</html>
