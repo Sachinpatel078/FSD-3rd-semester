@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+    function sum(){
+        let a = Number(document.getElementById("Num1").value);
+        let b = Number(document.getElementById("Num2").value);
+
+        if (a == null || b == 0 || a == 0 || b == null) {
+            window.alert("Please Enter the numbers");
+            return;
+        }
+
+        let sum = a + b;
+        document.write(sum);
+    }
+
+    </script>
+
+    <label>Enter no 1:</label>
+    <input type="number" id="Num1">
+
+    <br><br>
+
+    <label>Enter no 2:</label>
+    <input type="number" id="Num2">
+
+    <br><br>
+    <label> SUM OF BOTH THE NOS ARE :   </label>
+    
+    <button onclick="sum()">Result</button>
+</body>
+</html>
