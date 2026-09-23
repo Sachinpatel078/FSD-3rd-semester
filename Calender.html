@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 Attendance Calculator</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:linear-gradient(135deg,#eef2ff,#f8fafc);color:#172033;padding:30px 16px}
+.app{width:min(1100px,100%);margin:auto}
+header{text-align:center;margin-bottom:24px}
+h1{margin:0 0 8px;font-size:clamp(2rem,5vw,3.1rem)}
+header p{margin:0;color:#64748b}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:18px;padding:18px;text-align:center;box-shadow:0 10px 30px #0f172a12}
+.card .number{display:block;font-size:1.9rem;font-weight:800;color:#4f46e5}
+.card .label{color:#64748b;font-size:.88rem;margin-top:4px}
+.step-panel{background:#fff;border:1px solid #c7d2fe;border-radius:18px;padding:17px 20px;margin-bottom:18px;text-align:center}
+.step-title{font-weight:800;color:#4338ca}
+.step-panel p{margin:7px 0 14px;color:#64748b}
+button{font:inherit;font-weight:700;cursor:pointer;border:0}
+.enter-btn{background:#4f46e5;color:#fff;border-radius:10px;padding:10px 15px}
+.enter-btn:disabled{opacity:.45;cursor:not-allowed}
+.calendar-wrap{background:#fff;border:1px solid #e2e8f0;border-radius:22px;padding:20px;box-shadow:0 15px 40px #0f172a14}
+.calendar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.calendar-header h2{margin:0;font-size:1.35rem}
+.controls{display:flex;gap:8px}
+.nav-btn{background:#eef2ff;color:#4338ca;border-radius:10px;width:38px;height:34px}
+.weekdays,.days{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
+.weekday{text-align:center;font-size:.78rem;font-weight:800;color:#64748b;padding:8px 0}
+.day{min-height:58px;border:1px solid #e2e8f0;background:#fff;border-radius:11px;padding:8px;text-align:left;position:relative;color:#172033}
+.day:hover{border-color:#818cf8;transform:translateY(-1px)}
+.day.empty{visibility:hidden;pointer-events:none}
+.day.selected{background:#4f46e5;border-color:#4f46e5;color:#fff}
+.day.today{outline:3px solid #c7d2fe}
+.day-number{font-weight:800;font-size:.95rem}
+.check{position:absolute;right:7px;bottom:6px}
+.clear-btn{margin-top:18px;background:#fee2e2;color:#b91c1c;border-radius:10px;padding:10px 13px}
+.hint{text-align:center;color:#64748b;font-size:.88rem;margin:14px 0 0}
+@media(max-width:700px){
+ .summary{grid-template-columns:repeat(2,1fr)}
+ .calendar-wrap{padding:13px}
+ .day{min-height:52px;padding:6px}
+ .weekdays,.days{gap:5px}
+}
+@media(max-width:430px){
+ .summary{grid-template-columns:1fr}
+ .weekday{font-size:.68rem}
+ .day{min-height:48px}
+}
+</style>
+</head>
+<body>
+<main class="app">
+<header>
+<h1>2026 Attendance Calculator</h1>
+<p>Select your total days first, then select the days you attended.</p>
+</header>
+
+<section class="summary">
+<div class="card"><span class="number" id="totalDays">0</span><span class="label">S1: Total Days</span></div>
+<div class="card"><span class="number" id="attendedDays">0</span><span class="label">S2: Attended Days</span></div>
+<div class="card"><span class="number" id="totalClasses">0</span><span class="label">S3: Total Classes (S1 × 8)</span></div>
+<div class="card"><span class="number" id="attendedClasses">0</span><span class="label">Attended Classes (S2 × 8)</span></div>
+<div class="card"><span class="number" id="attendancePercent">0%</span><span class="label">Attendance Percentage</span></div>
+</section>
+
+<section class="step-panel">
+<div class="step-title" id="stepTitle">Step 1: Select your total number of days (S1)</div>
+<p id="stepText">Click the dates below to select them. Then press Enter.</p>
+<button class="enter-btn" id="enterBtn" disabled>Enter → Select Attended Days</button>
+</section>
+
+<section class="calendar-wrap">
+<div class="calendar-header">
+<h2 id="monthTitle">January 2026</h2>
+<div class="controls">
+<button class="nav-btn" id="prevBtn" aria-label="Previous month">←</button>
+<button class="nav-btn" id="nextBtn" aria-label="Next month">→</button>
+</div>
+</div>
+
+<div class="weekdays">
+<div class="weekday">Sun</div><div class="weekday">Mon</div><div class="weekday">Tue</div>
+<div class="weekday">Wed</div><div class="weekday">Thu</div><div class="weekday">Fri</div><div class="weekday">Sat</div>
+</div>
+<div class="days" id="days"></div>
+
+<button class="clear-btn" id="clearBtn">Clear Current Step</button>
+<p class="hint" id="hint">Click any date to select it.</p>
+</section>
+</main>
+
+<script>
+const YEAR=2026;
+let currentMonth=0;
+let mode="s1";
+const s1Dates=new Set();
+const s2Dates=new Set();
+
+const daysEl=document.getElementById("days");
+const monthTitle=document.getElementById("monthTitle");
+const totalDaysEl=document.getElementById("totalDays");
+const attendedDaysEl=document.getElementById("attendedDays");
+const totalClassesEl=document.getElementById("totalClasses");
+const attendedClassesEl=document.getElementById("attendedClasses");
+const attendancePercentEl=document.getElementById("attendancePercent");
+const stepTitle=document.getElementById("stepTitle");
+const stepText=document.getElementById("stepText");
+const enterBtn=document.getElementById("enterBtn");
+const hint=document.getElementById("hint");
+
+function key(month,day){
+  return `${YEAR}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+}
+
+function renderCalendar(){
+  daysEl.innerHTML="";
+  const first=new Date(YEAR,currentMonth,1).getDay();
+  const count=new Date(YEAR,currentMonth+1,0).getDate();
+
+  monthTitle.textContent=new Date(YEAR,currentMonth,1).toLocaleString("en-US",{month:"long",year:"numeric"});
+
+  for(let i=0;i<first;i++){
+    const empty=document.createElement("div");
+    empty.className="day empty";
+    daysEl.appendChild(empty);
+  }
+
+  for(let day=1;day<=count;day++){
+    const date=key(currentMonth,day);
+    const selected=mode==="s1" ? s1Dates.has(date) : s2Dates.has(date);
+
+    const btn=document.createElement("button");
+    btn.type="button";
+    btn.className="day"+(selected?" selected":"");
+
+    const today=new Date();
+    if(today.getFullYear()===YEAR && today.getMonth()===currentMonth && today.getDate()===day){
+      btn.classList.add("today");
+    }
+
+    btn.innerHTML=`<span class="day-number">${day}</span>${selected?'<span class="check">✓</span>':""}`;
+
+    btn.addEventListener("click",()=>{
+      if(mode==="s1"){
+        if(s1Dates.has(date)) s1Dates.delete(date);
+        else s1Dates.add(date);
+      }else{
+        // S2 can only contain dates already selected in S1.
+        if(!s1Dates.has(date)) return;
+        if(s2Dates.has(date)) s2Dates.delete(date);
+        else s2Dates.add(date);
+      }
+      update();
+      renderCalendar();
+    });
+
+    daysEl.appendChild(btn);
+  }
+}
+
+function update(){
+  const s1=s1Dates.size;
+  const s2=s2Dates.size;
+  const s3=s1*8;
+  const attended=s2*8;
+  const percent=s3 ? (attended/s3)*100 : 0;
+
+  totalDaysEl.textContent=s1;
+  attendedDaysEl.textContent=s2;
+  totalClassesEl.textContent=s3;
+  attendedClassesEl.textContent=attended;
+  attendancePercentEl.textContent=percent.toFixed(2)+"%";
+
+  if(mode==="s1"){
+    stepTitle.textContent="Step 1: Select your total number of days (S1)";
+    stepText.innerHTML=`Selected <strong>${s1}</strong> total days. Click Enter when finished.`;
+    enterBtn.disabled=s1===0;
+    enterBtn.textContent="Enter → Select Attended Days";
+    hint.textContent="Click the dates that count as your total days.";
+  }else{
+    stepTitle.textContent="Step 2: Select your attended days (S2)";
+    stepText.innerHTML=`Selected <strong>${s2}</strong> attended days out of <strong>${s1}</strong>.`;
+    enterBtn.disabled=false;
+    enterBtn.textContent="Reset / Start Again";
+    hint.textContent="Only the S1 dates can be selected as attended days.";
+  }
+}
+
+enterBtn.addEventListener("click",()=>{
+  if(mode==="s1"){
+    mode="s2";
+  }else{
+    mode="s1";
+    s1Dates.clear();
+    s2Dates.clear();
+  }
+  update();
+  renderCalendar();
+});
+
+document.getElementById("prevBtn").addEventListener("click",()=>{
+  currentMonth=Math.max(0,currentMonth-1);
+  renderCalendar();
+});
+document.getElementById("nextBtn").addEventListener("click",()=>{
+  currentMonth=Math.min(11,currentMonth+1);
+  renderCalendar();
+});
+document.getElementById("clearBtn").addEventListener("click",()=>{
+  if(mode==="s1"){
+    s1Dates.clear();
+    s2Dates.clear();
+  }else{
+    s2Dates.clear();
+  }
+  update();
+  renderCalendar();
+});
+
+update();
+renderCalendar();
+</script>
+</body>
+</html>
