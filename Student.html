@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marks Result</title>
+</head>
+<body>
+    <script>
+        let n1 = Number(prompt("Enter the marks of sub 1"));
+        let n2 = Number(prompt("Enter the marks of sub 2"));
+        let n3 = Number(prompt("Enter the marks of sub 3"));
+        let n4 = Number(prompt("Enter the marks of sub 4"));
+        let n5 = Number(prompt("Enter the marks of sub 5"));
+
+        function Total_sum(){
+            return n1 + n2 + n3 + n4 + n5;
+        }
+
+        function Percentage(){
+            return (Total_sum() / 500) * 100;
+        }
+
+        function Grade(){
+            let percent = Percentage();
+            if (percent >= 90) return 'A';
+            else if (percent >= 80) return 'B';
+            else if (percent >= 70) return 'C';
+            else if (percent >= 60) return 'D';
+            else if (percent >= 50) return 'E';
+            else return 'F';
+        }
+
+        document.write("Total Marks = " + Total_sum() + "<br>");
+        document.write("Percentage = " + Percentage().toFixed(2) + "%<br>");
+        document.write("Grade = " + Grade() + "<br>");
+    </script>
+</body>
+</html>
